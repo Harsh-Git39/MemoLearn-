@@ -1,0 +1,56 @@
+
+<div id="memolearn-popup" class="memolearn-container">
+  <div class="memolearn-header">
+    <h3>📚 MemoLearn - Saved Queries</h3>
+    <button class="memolearn-close">✕</button>
+  </div>
+
+  <div class="memolearn-content">
+    <% if (matches && matches.length > 0) { %>
+      <% matches.forEach((item, index) => { %>
+        <div class="memolearn-item" id="item-<%= index %>">
+          
+          <div class="memolearn-query">
+            <strong>Q:</strong> <%= item.query %>
+          </div>
+
+          <div class="memolearn-answer">
+            <strong>A:</strong> 
+            <p><%= item.answer.substring(0, 300) %><%= item.answer.length > 300 ? '...' : '' %></p>
+          </div>
+
+          <% if (item.similarity) { %>
+            <div class="memolearn-similarity">
+              <%= Math.round(item.similarity * 100) %>% match
+            </div>
+          <% } %>
+
+          <div class="memolearn-actions">
+            <button 
+              class="memolearn-pin" 
+              data-id="<%= item.id || Date.now() + index %>"
+              data-query="<%= item.query.replace(/"/g, '&quot;') %>"
+              data-answer="<%= item.answer.replace(/"/g, '&quot;') %>">
+              📌 Pin
+            </button>
+
+            <button 
+              class="memolearn-copy" 
+              data-answer="<%= item.answer.replace(/"/g, '&quot;') %>">
+              📋 Copy
+            </button>
+
+            <button 
+              class="memolearn-delete" 
+              data-id="<%= item.id || Date.now() + index %>">
+              🗑️ Delete
+            </button>
+          </div>
+
+        </div>
+      <% }); %>
+    <% } else { %>
+      <p class="memolearn-empty">No saved queries found for this search.</p>
+    <% } %>
+  </div>
+</div>

@@ -1,0 +1,363 @@
+/* Reset and base styles for MemoLearn popup */
+.memolearn-popup * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main popup container */
+.memolearn-container {
+  position: fixed !important;
+  right: 20px !important;
+  top: 120px !important;
+  width: 380px !important;
+  max-height: 650px !important;
+  background: #ffffff !important;
+  border: 2px solid #4CAF50 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+  z-index: 2147483647 !important; /* Highest possible z-index */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  overflow: hidden !important;
+  animation: memolearn-slideIn 0.3s ease-out !important;
+}
+
+/* Slide-in animation */
+@keyframes memolearn-slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Header section */
+.memolearn-header {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%) !important;
+  color: white !important;
+  padding: 16px 20px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  border-radius: 10px 10px 0 0 !important;
+}
+
+.memolearn-header h3 {
+  margin: 0 !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: white !important;
+}
+
+/* Close button */
+.memolearn-close {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: none !important;
+  color: white !important;
+  font-size: 24px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+}
+
+.memolearn-close:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  transform: scale(1.1) !important;
+}
+
+/* Content area */
+.memolearn-content {
+  padding: 20px !important;
+  max-height: 500px !important;
+  overflow-y: auto !important;
+  background: #ffffff !important;
+}
+
+/* Custom scrollbar */
+.memolearn-content::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+.memolearn-content::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+  border-radius: 4px !important;
+}
+
+.memolearn-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1 !important;
+  border-radius: 4px !important;
+}
+
+.memolearn-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8 !important;
+}
+
+/* Individual query item */
+.memolearn-item {
+  margin-bottom: 20px !important;
+  padding: 16px !important;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+  border-left: 4px solid #4CAF50 !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+}
+
+.memolearn-item:hover {
+  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.memolearn-item:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Query text */
+.memolearn-query {
+  font-size: 14px !important;
+  color: #2c3e50 !important;
+  margin-bottom: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+}
+
+.memolearn-query strong {
+  color: #4CAF50 !important;
+  font-weight: 700 !important;
+}
+
+/* Answer text */
+.memolearn-answer {
+  font-size: 13px !important;
+  color: #495057 !important;
+  margin-bottom: 16px !important;
+  line-height: 1.5 !important;
+}
+
+.memolearn-answer p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.memolearn-answer strong {
+  color: #2196F3 !important;
+  font-weight: 600 !important;
+}
+
+/* Action buttons container */
+.memolearn-actions {
+  display: flex !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+/* Individual action buttons */
+.memolearn-pin,
+.memolearn-copy,
+.memolearn-delete {
+  flex: 1 !important;
+  min-width: 90px !important;
+  padding: 8px 12px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  border: 2px solid transparent !important;
+  background: #ffffff !important;
+  cursor: pointer !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+}
+
+/* Pin button styling */
+.memolearn-pin {
+  border-color: #4CAF50 !important;
+  color: #4CAF50 !important;
+}
+
+.memolearn-pin:hover {
+  background: #4CAF50 !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3) !important;
+}
+
+.memolearn-pin:disabled {
+  opacity: 0.7 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Copy button styling */
+.memolearn-copy {
+  border-color: #2196F3 !important;
+  color: #2196F3 !important;
+}
+
+.memolearn-copy:hover {
+  background: #2196F3 !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3) !important;
+}
+
+/* Delete button styling */
+.memolearn-delete {
+  border-color: #f44336 !important;
+  color: #f44336 !important;
+}
+
+.memolearn-delete:hover {
+  background: #f44336 !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3) !important;
+}
+
+/* Empty state message */
+.memolearn-empty {
+  text-align: center !important;
+  color: #6c757d !important;
+  padding: 40px 20px !important;
+  font-style: italic !important;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+  border-radius: 8px !important;
+  border: 2px dashed #dee2e6 !important;
+}
+
+/* Success states */
+.memolearn-pin.success,
+.memolearn-copy.success {
+  background: #28a745 !important;
+  color: white !important;
+  border-color: #28a745 !important;
+}
+
+/* Loading state */
+.memolearn-loading {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 40px !important;
+  color: #6c757d !important;
+}
+
+.memolearn-spinner {
+  width: 20px !important;
+  height: 20px !important;
+  border: 2px solid #f3f3f3 !important;
+  border-top: 2px solid #4CAF50 !important;
+  border-radius: 50% !important;
+  animation: memolearn-spin 1s linear infinite !important;
+  margin-right: 10px !important;
+}
+
+@keyframes memolearn-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Similarity score badge */
+.memolearn-similarity {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  background: rgba(76, 175, 80, 0.1) !important;
+  color: #4CAF50 !important;
+  padding: 2px 8px !important;
+  border-radius: 12px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 1200px) {
+  .memolearn-container {
+    right: 10px !important;
+    width: 320px !important;
+  }
+}
+
+@media (max-height: 700px) {
+  .memolearn-container {
+    max-height: 400px !important;
+    top: 80px !important;
+  }
+  
+  .memolearn-content {
+    max-height: 300px !important;
+  }
+}
+
+/* Fade out animation for deletion */
+.memolearn-item.fade-out {
+  opacity: 0 !important;
+  transform: translateX(100px) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .memolearn-container {
+    border-width: 3px !important;
+  }
+  
+  .memolearn-pin,
+  .memolearn-copy,
+  .memolearn-delete {
+    border-width: 3px !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .memolearn-container,
+  .memolearn-item,
+  .memolearn-pin,
+  .memolearn-copy,
+  .memolearn-delete,
+  .memolearn-close {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Dark mode support (for future enhancement) */
+@media (prefers-color-scheme: dark) {
+  .memolearn-container {
+    background: #2d3748 !important;
+    border-color: #4CAF50 !important;
+    color: #e2e8f0 !important;
+  }
+  
+  .memolearn-content {
+    background: #2d3748 !important;
+  }
+  
+  .memolearn-item {
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%) !important;
+    color: #e2e8f0 !important;
+  }
+  
+  .memolearn-query {
+    color: #e2e8f0 !important;
+  }
+  
+  .memolearn-answer {
+    color: #cbd5e0 !important;
+  }
+}

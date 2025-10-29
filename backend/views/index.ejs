@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemoLearn API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .status {
+            padding: 10px;
+            background: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            margin: 20px 0;
+        }
+        .routes {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        code {
+            background: #333;
+            color: #0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 MemoLearn API Server</h1>
+        
+        <div class="status">
+            <%- content %>
+        </div>
+        
+        <h2>Available Routes:</h2>
+        <div class="routes">
+            <ul>
+                <li><code>GET /</code> - This page</li>
+                <li><code>POST /match</code> - Match similar queries</li>
+                <li><code>POST /popup</code> - Render popup HTML</li>
+                <li><code>POST /save</code> - Save a query</li>
+                <li><code>GET /get</code> - Get all saved queries</li>
+                <li><code>POST /delete</code> - Delete a query</li>
+                <li><code>POST /copy</code> - Copy action</li>
+                <li><code>POST /clear</code> - Clear all data</li>
+                <li><code>GET /status</code> - API status</li>
+            </ul>
+        </div>
+        
+        <h2>Test the API:</h2>
+        <p>Use tools like Postman, curl, or your browser console to test the endpoints.</p>
+        
+        <p><strong>Example curl command:</strong></p>
+        <pre style="background: #333; color: #0f0; padding: 10px; border-radius: 4px; overflow-x: auto;">curl -X POST http://localhost:3000/match \
+  -H "Content-Type: application/json" \
+  -d '{"query": "how to learn javascript"}'</pre>
+    </div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1761735900590",
+    "query": "how to make cake ",
+    "answer": "Step 1: Prepare Baking Pans. ... Step 2: Allow Ingredients to Reach Room Temperature. ... Step 3: Preheat the Oven. ... Step 4: Stir Together Dry Ingredients. ... Step 5: Combine the Butter and Sugar. ... Step 6: Add Eggs One at a Time. ... Step 7: Alternate Adding Dry and Wet Ingredients. ... Step 8: Pour Batter into Pans and Bake",
+    "pinnedAt": "2025-10-29T11:05:00.597Z"
+  },
+  {
+    "id": "1761736658492",
+    "query": "how to learn python",
+    "answer": "Learning by Examples With our \"Try it Yourself\" editor, you can edit Python code and view the result.",
+    "pinnedAt": "2025-10-29T11:17:38.501Z"
+  },
+  {
+    "id": "1761736734251",
+    "query": "diff in python and java ",
+    "answer": "Key Differences: Language Type & Execution: Java: A compiled, statically-typed language. Java code is compiled into bytecode, which is then executed by the Java Virtual Machine (JVM). This allows for \"Write Once, Run Anywhere\" (WORA) portability. Python: An interpreted, dynamically-typed language. Python code is executed line by line by an interpreter, translating the source code into machine-independent bytecode during runtime. Syntax and Readability: Java: Features a more verbose syntax with explicit type declarations, curly braces for code blocks, and semicolons to terminate statements. This can make it more explicit but potentially less concise. Python: Emphasizes simplicity and readability with a more concise syntax, using indentation to define code blocks instead of braces, and generally requiring fewer lines of code to achieve the same functionality. Performance:",
+    "pinnedAt": "2025-10-29T11:18:54.258Z"
+  }
+]

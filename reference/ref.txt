@@ -1,0 +1,370 @@
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const { spawn } = require('child_process');
+
+const app = express();
+app.use(express.json());
+
+// CORS for extension
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
+app.set('view engine', 'ejs');
+
+const DATA_FILE = 'pinned-memolearn.json';
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+function loadData() {
+  try {
+    if (fs.existsSync(DATA_FILE)) {
+      return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+    }
+  } catch (err) {
+    console.error('Error loading data:', err);
+  }
+  return [];
+}
+
+function saveData(data) {
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+}
+
+// ============================================
+// ROUTES
+// ============================================
+
+// Route 1: HOME - Show buttons for testing
+app.get('/', (req, res) => {
+  res.render('index', {
+    content: '<p>Welcome to MemoLearn API</p>'
+  });
+});
+
+// ============================================
+// Route 2: /match - Match similar queries
+// ============================================
+app.post('/match', (req, res) => {
+  const { query } = req.body;
+
+  console.log(`[/match] Received query: "${query}"`);
+
+  if (!query) {
+    return res.json({ 
+      error: 'Query is required', 
+      matches: [] 
+    });
+  }
+
+  // Call Python script for similarity matching
+  const pythonProcess = spawn('python', ['match.py', query]);
+
+  let output = '';
+  let errorOutput = '';
+
+  pythonProcess.stdout.on('data', (data) => {
+    output += data.toString();
+  });
+
+  pythonProcess.stderr.on('data', (data) => {
+    errorOutput += data.toString();
+  });
+
+  pythonProcess.on('close', (code) => {
+    if (code === 0) {
+      try {
+        const matches = JSON.parse(output);
+        console.log(`[/match] Found ${matches.length} matches`);
+        res.json({ 
+          success: true,
+          query: query,
+          matches: matches 
+        });
+      } catch (err) {
+        console.error('[/match] Error parsing matches:', err);
+        res.json({ 
+          error: 'Error parsing matches', 
+          matches: [] 
+        });
+      }
+    } else {
+      console.error('[/match] Python error:', errorOutput);
+      res.json({ 
+        error: 'Error matching query', 
+        matches: [] 
+      });
+    }
+  });
+});
+
+// ============================================
+// Route 3: /popup - Render popup with matches
+// ============================================
+app.post('/popup', (req, res) => {
+  const { matches } = req.body;
+
+  console.log(`[/popup] Rendering popup with ${matches ? matches.length : 0} matches`);
+
+  try {
+    res.render('popup', { 
+      matches: matches || [] 
+    });
+  } catch (err) {
+    console.error('[/popup] Error rendering:', err);
+    res.json({ 
+      error: 'Error rendering popup' 
+    });
+  }
+});
+
+// ============================================
+// Route 4: /save - Pin/Save query (POST)
+// ============================================
+app.post('/save', (req, res) => {
+  const { query, answer, id } = req.body;
+
+  console.log(`[/save] Saving query: "${query.substring(0, 50)}..."`);
+
+  if (!query || !answer) {
+    return res.json({ 
+      success: false, 
+      error: 'Query and answer required' 
+    });
+  }
+
+  try {
+    const data = loadData();
+
+    // Check if already exists
+    const exists = data.find(
+      item => item.query.toLowerCase() === query.toLowerCase()
+    );
+
+    if (exists) {
+      return res.json({ 
+        success: false, 
+        error: 'Query already pinned',
+        id: exists.id
+      });
+    }
+
+    // Add new query
+    const newItem = {
+      id: id || Date.now().toString(),
+      query: query,
+      answer: answer,
+      pinnedAt: new Date().toISOString()
+    };
+
+    data.push(newItem);
+    saveData(data);
+
+    console.log(`[/save] Successfully saved. Total items: ${data.length}`);
+
+    res.json({ 
+      success: true, 
+      message: 'Query pinned!',
+      item: newItem
+    });
+
+  } catch (err) {
+    console.error('[/save] Error saving:', err);
+    res.json({ 
+      success: false, 
+      error: err.message 
+    });
+  }
+});
+
+// ============================================
+// Route 5: /get - Get all saved queries (GET)
+// ============================================
+app.get('/get', (req, res) => {
+  console.log(`[/get] Fetching all saved queries`);
+
+  try {
+    const data = loadData();
+    console.log(`[/get] Found ${data.length} queries`);
+
+    res.json({ 
+      success: true,
+      total: data.length,
+      queries: data 
+    });
+
+  } catch (err) {
+    console.error('[/get] Error fetching:', err);
+    res.json({ 
+      success: false, 
+      error: err.message 
+    });
+  }
+});
+
+// ============================================
+// Route 6: /delete - Delete query (POST)
+// ============================================
+app.post('/delete', (req, res) => {
+  const { id } = req.body;
+
+  console.log(`[/delete] Deleting query with id: ${id}`);
+
+  if (!id) {
+    return res.json({ 
+      success: false, 
+      error: 'ID required' 
+    });
+  }
+
+  try {
+    let data = loadData();
+    const initialLength = data.length;
+
+    // Find and delete
+    const itemToDelete = data.find(item => item.id === id);
+    data = data.filter(item => item.id !== id);
+
+    if (data.length === initialLength) {
+      return res.json({ 
+        success: false, 
+        error: 'Query not found',
+        id: id
+      });
+    }
+
+    saveData(data);
+
+    console.log(`[/delete] Successfully deleted. Remaining: ${data.length}`);
+
+    res.json({ 
+      success: true, 
+      message: 'Query deleted!',
+      deletedItem: itemToDelete,
+      remaining: data.length
+    });
+
+  } catch (err) {
+    console.error('[/delete] Error deleting:', err);
+    res.json({ 
+      success: false, 
+      error: err.message 
+    });
+  }
+});
+
+// ============================================
+// Route 7: /copy - Handle copy action
+// ============================================
+app.post('/copy', (req, res) => {
+  const { answer } = req.body;
+
+  console.log(`[/copy] Copying answer: "${answer.substring(0, 50)}..."`);
+
+  if (!answer) {
+    return res.json({ 
+      success: false, 
+      error: 'Answer required' 
+    });
+  }
+
+  res.json({ 
+    success: true, 
+    message: 'Answer ready to copy',
+    answerLength: answer.length
+  });
+});
+
+// ============================================
+// Route 8: /clear - Clear all data (Admin)
+// ============================================
+app.post('/clear', (req, res) => {
+  console.log(`[/clear] Clearing all data`);
+
+  try {
+    saveData([]);
+    res.json({ 
+      success: true, 
+      message: 'All queries cleared!' 
+    });
+  } catch (err) {
+    res.json({ 
+      success: false, 
+      error: err.message 
+    });
+  }
+});
+
+// ============================================
+// Route 9: /status - Check API status
+// ============================================
+app.get('/status', (req, res) => {
+  try {
+    const data = loadData();
+    res.json({ 
+      success: true,
+      status: 'MemoLearn API Running',
+      totalSavedQueries: data.length,
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString()
+    });
+  } catch (err) {
+    res.json({ 
+      success: false, 
+      error: err.message 
+    });
+  }
+});
+
+// ============================================
+// ERROR HANDLING
+// ============================================
+
+app.use((req, res) => {
+  res.status(404).json({ 
+    error: 'Route not found',
+    availableRoutes: [
+      'GET /',
+      'POST /match',
+      'POST /popup',
+      'POST /save',
+      'GET /get',
+      'POST /delete',
+      'POST /copy',
+      'POST /clear',
+      'GET /status'
+    ]
+  });
+});
+
+// ============================================
+// START SERVER
+// ============================================
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`
+╔════════════════════════════════════════╗
+║   🚀 MemoLearn Server Running          ║
+║   Port: ${PORT}                              ║
+║   API: http://localhost:${PORT}             ║
+╚════════════════════════════════════════╝
+  `);
+  console.log('Available Routes:');
+  console.log('  GET  /');
+  console.log('  POST /match');
+  console.log('  POST /popup');
+  console.log('  POST /save');
+  console.log('  GET  /get');
+  console.log('  POST /delete');
+  console.log('  POST /copy');
+  console.log('  POST /clear');
+  console.log('  GET  /status');
+});
+
+module.exports = app;
